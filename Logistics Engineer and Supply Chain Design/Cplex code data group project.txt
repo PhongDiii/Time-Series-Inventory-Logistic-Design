@@ -1,0 +1,37 @@
+/*********************************************
+ * OPL 22.1.0.0 Data
+ * Author: Admin
+ * Creation Date: 31 thg 3, 2024 at 22:46:22
+ *********************************************/
+SheetConnection excelsheet("C:\\Users\\Admin\\Downloads\\Data Logdes.xlsx");
+S from SheetRead(excelsheet,"Set!B3");
+P from SheetRead(excelsheet,"Set!B4");
+DC from SheetRead(excelsheet,"Set!B5");
+R from SheetRead(excelsheet,"Set!B6");
+Cp from SheetRead(excelsheet,"Data!A2:C2");
+Cd from SheetRead(excelsheet,"Data!A6:C6");
+M from SheetRead(excelsheet,"Data!X31:Z31");
+T from SheetRead(excelsheet,"Data!X34:Z34");
+LC1 from SheetRead(excelsheet,"Data!A3:C3");
+LC2 from SheetRead(excelsheet,"Data!A7:C7");
+Pr from SheetRead(excelsheet,"Data!B10:B38");
+PC from SheetRead(excelsheet,"Data!F1");
+Dist1 from SheetRead(excelsheet,"Data!F4:H32");
+Dist2 from SheetRead(excelsheet,"Data!L4:R6");
+Dist3 from SheetRead(excelsheet,"Data!V4:AE10");
+TC from SheetRead(excelsheet,"Data!M17:O17");
+CM from SheetRead(excelsheet,"Data!N20:P20");
+Mop from SheetRead(excelsheet,"Set!G1");
+Mup from SheetRead(excelsheet,"Set!G2");
+Mudc from SheetRead(excelsheet,"Set!G3");
+CDC from SheetRead(excelsheet,"Data!N24:P24");
+Trv1 from SheetRead(excelsheet,"Data!O32:Q60");
+Trv2 from SheetRead(excelsheet,"Data!T32:V41");
+Fcons1 from SheetRead(excelsheet,"Data!X32:Z32");
+Fcons2 from SheetRead(excelsheet,"Data!X35:Z35");
+Cap1 from SheetRead(excelsheet,"Data!X39:Z39");
+Cap2 from SheetRead(excelsheet,"Data!X42:Z42");
+Emfc from SheetRead(excelsheet,"Data!T44");
+Empr from SheetRead(excelsheet,"Data!T45");
+Ur from SheetRead(excelsheet,"Data!T47:V47");
+phi from SheetRead(excelsheet,"Data!M20:M48");

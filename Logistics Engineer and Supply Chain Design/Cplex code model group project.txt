@@ -1,0 +1,138 @@
+/*********************************************
+ * OPL 22.1.0.0 Model
+ * Author: Admin
+ * Creation Date: 31 thg 3, 2024 at 22:46:22
+ *********************************************/
+ int S=...;
+ int P=...;
+ int DC=...;
+ int R=...;
+ {string} Cp=...;
+ {string} Cd=...;
+ {string} M=...;
+ {string} T=...;
+ 
+ range s = 1..S;
+ range p = 1..P;
+ range dc= 1..DC;
+ range r = 1..R;
+
+execute{
+  var now = new Date();
+    Opl.srand(Math.round(now.getTime()/1000));
+}
+ float LC1[Cp]=...;
+ float LC2[Cd]=...;
+ float Pr[s]=...;
+ float PC=...;
+ float Dist1[s][p]=...;
+ float Dist2[p][dc]=...;
+ float Dist3[dc][r]=...;
+ float TC[T]=...;
+ int scale1=15;
+ float CS[i in s]=20+rand(scale1)/scale1*(35-20);
+ int CM[Cp]=...;
+ float Mop=...;
+ float Mup=...;
+ float Mudc=...;
+ int CDC[Cd]=...;
+ int scale=80;
+ float Dem[i in r]=40+rand(scale)/scale*(120-40);
+ 
+ int Trv1[s][M]=...;
+ int Trv2[r][T]=...;
+ float Fcons1[M]=...;
+ float Fcons2[T]=...;
+ int Cap1[M]=...;
+ int Cap2[T]=...;
+ float Emfc=...;
+ float Empr=...;
+ float Ur[p]=...;
+ int phi[s]=...;
+ int BigM = 999999;
+ //Decision variables
+ dvar int+ x1[s][p][M];
+ dvar int+ x2[p][dc][T];
+ dvar int+ x3[dc][r][T];
+ dvar boolean y[s];
+ dvar boolean y1[p][Cp];
+ dvar boolean y2[dc][Cd];
+ 
+ //Objective functions
+ dexpr float Z1=sum(p in p, Cp in Cp)(LC1[Cp]*y1[p][Cp]) + sum(dc in dc, Cd in Cd)(LC2[Cd]*y2[dc][Cd]) + sum(s in s, p in p, m in M)(Pr[s]*x1[s][p][m])+ sum(p in p, dc in dc, t in T)(PC*x2[p][dc][t]) + sum(p in p, dc in dc, t in T)(TC[t]*x2[p][dc][t])+ sum(dc in dc, r in r, t in T)(TC[t]*x3[dc][r][t]);
+ dexpr float Z2=sum(s in s, p in p, m in M)(Emfc*Dist1[s][p]*x1[s][p][m]/(Cap1[m]*Fcons1[m]))+sum(p in p,t in T,d in dc)(Emfc*Dist2[p][d]*x2[p][d][t]/(Cap2[t]*Fcons2[t]))+sum(r in r, t in T, d in dc)(Emfc*Dist3[d][r]*x3[d][r][t]/(Cap2[t]*Fcons2[t]))+sum(p in p, d in dc, t in T)Empr*x2[p][d][t];
+ dexpr float Z3=(sum(p in p, cp in Cp)Ur[p]*y1[p][cp])/(sum(p in p)(Ur[p]))+(sum(s in s)phi[s]*y[s])/(sum(s in s)phi[s]);
+ 
+//minimize Z1;
+//minimize Z2;
+//maximize Z3;
+minimize ((Z1-116310)/116310)+((Z2-19209)/19209)+((0.94089-Z3)/0.94089);
+
+
+ //Constraints
+ subject to{
+c4: forall (r in r)
+  sum(d in dc, t in T)x3[d][r][t]==Dem[r];
+
+
+c5:         forall(p in p)
+	sum(s in s, m in M)x1[s][p][m]==sum(d in dc, t in T)x2[p][d][t];
+c6:         forall(d in dc)
+	sum(r in r, t in T)x3[d][r][t]==sum(p in p, t in T)x2[p][d][t];
+
+
+c7: 
+	forall(s in s)BigM*(y[s]-1)+sum(p in p, m in M)x1[s][p][m]<=CS[s];
+	
+c8: 
+	forall(p in p, cp in Cp)
+	  BigM*(y1[p][cp]-1)+sum(d in dc, t in T)x2[p][d][t]<=CM[cp]*Mop;
+	
+c9: 
+	forall(d in dc, cd in Cd)
+	  BigM*(y2[d][cd]-1)+sum(p in p, t in T)x2[p][d][t]<=CDC[cd];
+	
+c10: 
+	forall(s in s, m in M)
+	  BigM*(y[s]-1)+sum(p in p)x1[s][p][m]<=CS[s]*Trv1[s][m];
+	
+c11: 
+	forall(d in dc, cd in Cd, r in r, t in T)
+	  BigM*(y2[d][cd]-1)+sum(d in dc)x3[d][r][t]<= CDC[cd]*Trv2[r][t];
+	
+c12: 
+	forall(p in p, cp in Cp)
+	  BigM*(y1[p][cp]-1)+sum(cp in Cp)CM[cp]*Mup<=sum(d1 in dc, t in T)x2[p][d1][t];
+	
+c13: 
+	forall(d in dc, cd in Cd)
+	BigM*(y2[d][cd]-1)+CDC[cd]*Mudc<=sum(p in p, t in T)x2[p][d][t];
+
+
+c14: forall(p in p)
+	sum(cp in Cp)y1[p][cp]<=1;
+
+
+c15: forall(d in dc)
+	sum(cd in Cd)y2[d][cd]<=1;
+
+
+c16: forall(s in s)
+	  BigM*y[s]>=sum(p in p, m in M)x1[s][p][m];
+
+c17: forall(p in p)
+	  BigM*sum(cp in Cp)y1[p][cp]>=sum(d in dc, t in T)x2[p][d][t];
+
+c18: forall(d in dc)
+	  BigM*sum(cd in Cd)y2[d][cd]>=sum(p in p, t in T)x2[p][d][t];
+
+c19: forall(d in dc)
+	  BigM*sum(cd in Cd)y2[d][cd]>=sum(r in r, t in T)x3[d][r][t];
+}
+
+
+execute{
+  writeln("z1,",Z1);
+  writeln("z2,",Z2);
+  writeln("z3",Z3);
+}
